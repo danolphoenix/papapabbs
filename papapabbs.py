@@ -2,93 +2,67 @@
 #coding=utf-8
 
 import sys,os
-
 import re
+import random
 import time
 import urllib,urllib2
 
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
-# try:
-    # import apport_python_hook
-# except ImportError:
-    # pass
-# else:
-    # apport_python_hook.install()
+__author__ = 'luodan Rodan'
+__email__ = 'danolphoenix@163.com'
+__github__='https://github.com/danolphoenix'
 
+#Hi all, this is an easy reptilian (Sorry ,I really dont know how to call it)
+#to help you get the pictures in the comment of bbs.uestc.edu.cn.
+#the picture in the comment will be named after its author's name.
+#if the name has existed, then the picture will be named after its author's name + a random number with range(1,1000)
+#hope you have fun
 
-def getHtml(url):
-	#page = urllib.urlopen(url)
-	#html = page.read()
- 	html = '<img id="aimg_1694151" aid="1694151" src="static/image/common/none.gif" zoomfile="data/attachment/forum/201505/30/213528etghay0h2uhyb2na.jpg" file="data/attachment/forum/201505/30/213528etghay0h2uhyb2na.jpg" class="zoom"'
-	return html
-
-def getImg(html):
-    import pdb
-    pdb.set_trace()
-    reg = r'class="xw1">(.*?)</a>.*?(data/attachment/forum.*?jpg)'
-    reg = r'<div.*?class="xw1">(.*?)</a>.*?zoomfile.*?(data/attachment/forum.*?jpg)'
-    imgre = re.compile(reg)
-    author_img_list = re.findall(imgre, html)
-    print author_img_list
-    for author_img in author_img_list:
-        author = author_img[0]
-        imgurl = r'http://bbs.uestc.edu.cn/' + author_img[1]
-        print imgurl
-        urllib.urlretrieve(imgurl, '%s.jpg' % author)
-
-	# max = 0
-	# for i,imgurl in enumerate(imglist):
-		# print imgurl
-		# urllib.urlretrieve(imgurl, '%s.jpg' %i)
-		# max+=1
-		# if max==20:
-			# time.sleep(0.1)
-			# max = 0
-
-
-for page in range(1,9):
+# the range of the postpage, which depends on the total count of the postpage.
+for page in range(1,10):
     print page
-    url = 'http://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=1522728&extra=&page=' + str(page)
+    postUrl = 'THE ADDRESS OF THE POST' # such as 'http://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=XXXXXXX' ,REMEBER THE QUOTES
+    url = postUrl +'&extra=&page=' + str(page)
+
+	###############pretend browser################
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'
-    cookie = 
+    cookie = 'THE COOKIES OF THE BROWSER' # you can get it in chrome with CTRL+SHIFT+I,REMEBER THE QUOTES
     headers = {'User-Agent' : user_agent,
             'cookie' : cookie}
+
+	#############get the page content#######
     try :
         request = urllib2.Request(url, headers = headers)
         response = urllib2.urlopen(request)
-        # getImg(response.read().decode('utf-8'))
         content = response.read().decode('utf-8')
-        reg = r'class="xw1">(.*?)</a>.*?zoomfile.*?(data/attachment/forum.*?(?:jpg|png)).*?<div'
-
-        reg = r'<div id="post_.*?class="xw1">(.*?)</a>.*?<td class="plc"(.*?)<a class="cmmnt"'
 		
+		###########get authors and the comment content###########
+        reg = r'<div id="post_.*?class="xw1">(.*?)</a>.*?<td class="plc"(.*?)<a class="cmmnt"'
         pattern = re.compile(reg, re.S)
         items = re.findall(pattern, content)
-       
-        
         for item in items:
-            # print item[0].encode('utf-8'),item[1]
-            #author = item[0].encode('utf-8')
-            print item
-            #import pdb
-            #pdb.set_trace()
+            #item[0] is the author,and item[1]is the comment content
+			############get the imgurl in the comment content########
+            content_reg = r'zoomfile.*?(data/attachment/forum.*?(?:jpg|png|bmp))'
+            content_pattern = re.compile(content_reg, re.S)
+            zoom_img_urls = re.findall(content_pattern, item[1])
 			
-			
-            urlreg = r'zoomfile.*?(data/attachment/forum.*?(?:jpg|png))'
-            urlpattern = re.compile(urlreg, re.S)
-            urlresult = re.findall(urlpattern, item[1])	
-            if  (len(urlresult)!=0) :			
-                imgurl = r'http://bbs.uestc.edu.cn/' + urlresult[0]
+            if  (len(zoom_img_urls)!=0) :
                 print item[0]
-                print imgurl
-				
-				
-                #import pdb
-                #pdb.set_trace()
-                urllib.urlretrieve(imgurl, item[0].encode(sys.getfilesystemencoding())+'.jpg' )
-                #import pdb
-                #pdb.set_trace()
+                #import pdb;pdb.set_trace()
+                for zoom_img_url in zoom_img_urls:
+                    ###########get the extension name of the picture#################
+                    extension_re = r'.*\.(.*$)'
+                    extension_pattern = re.compile(extension_re)
+                    extension_name = re.findall(extension_pattern, zoom_img_url)
+
+                    imgurl = r'http://bbs.uestc.edu.cn/' + zoom_img_url
+                    print imgurl
+
+                    if not os.path.exists(os.getcwd() + "\\" + item[0] + '.'+ extension_name[0]):
+                        urllib.urlretrieve(imgurl, item[0].encode(sys.getfilesystemencoding())+'.'+str(extension_name[0]) )
+                    else:
+                        urllib.urlretrieve(imgurl, item[0].encode(sys.getfilesystemencoding())+'('+str(random.randrange(0,1001))+')'+'.'+ str(extension_name[0]) )                        
+
     except urllib2.URLError, e:
         if hasattr(e,"code"):
             print e.code
