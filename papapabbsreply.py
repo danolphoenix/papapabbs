@@ -42,7 +42,7 @@ for page in range(300,377):
         reg = r'<div id="post_.*?class="xw1">(.*?)</a>.*?<td class="plc"(.*?)<a class="cmmnt"'
         pattern = re.compile(reg, re.S)
         items = re.findall(pattern, content)
-        if items[0] != "user":
+        if items[0] != "username": # the one you want to get whose comment
             continue
         for item in items:
             #item[0] is the author,and item[1]is the comment content
