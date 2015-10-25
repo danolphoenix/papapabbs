@@ -35,7 +35,7 @@ for page in range(1,10):
         response = urllib2.urlopen(request)
         content = response.read().decode('utf-8')
 		
-		###########get authors and the comment content###########
+	###########get authors and the comment content###########
         reg = r'<div id="post_.*?class="xw1">(.*?)</a>.*?<td class="plc"(.*?)<a class="cmmnt"'
         pattern = re.compile(reg, re.S)
         items = re.findall(pattern, content)
