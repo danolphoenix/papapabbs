@@ -23,7 +23,7 @@ for page in range(1,10):
     postUrl = 'THE ADDRESS OF THE POST' # such as 'http://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=XXXXXXX' ,REMEBER THE QUOTES
     url = postUrl +'&extra=&page=' + str(page)
 
-	###############pretend browser################
+    ###############pretend browser################
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'
     cookie = 'THE COOKIES OF THE BROWSER' # you can get it in chrome with CTRL+SHIFT+I,REMEBER THE QUOTES
     headers = {'User-Agent' : user_agent,
