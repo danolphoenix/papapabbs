@@ -29,7 +29,7 @@ for page in range(1,10):
     headers = {'User-Agent' : user_agent,
             'cookie' : cookie}
 
-	#############get the page content#######
+    #############get the page content#######
     try :
         request = urllib2.Request(url, headers = headers)
         response = urllib2.urlopen(request)
