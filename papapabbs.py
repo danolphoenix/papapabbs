@@ -41,7 +41,7 @@ for page in range(1,10):
         items = re.findall(pattern, content)
         for item in items:
             #item[0] is the author,and item[1]is the comment content
-			############get the imgurl in the comment content########
+	    ############get the imgurl in the comment content########
             content_reg = r'zoomfile.*?(data/attachment/forum.*?(?:jpg|png|bmp))'
             content_pattern = re.compile(content_reg, re.S)
             zoom_img_urls = re.findall(content_pattern, item[1])
