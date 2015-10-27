@@ -1,6 +1,6 @@
 #!/bin/python
 #-*-coding:utf-8-*-  
- 
+
 #Python实现论坛发帖和回复
   
 import urllib,urllib2  
@@ -9,6 +9,7 @@ import urllib,urllib2
 request_url='http://bbs.uestc.edu.cn/forum.php?mod=post&action=newthread&fid=25&extra=&topicsubmit=yes'
 
 #cookie  
+
 sendCookie= 
 
 #发送的Headers，必须要有Cookie  
@@ -32,6 +33,5 @@ returnedReq=urllib2.Request(
     data=body,  
     headers=sendheaders)
 returnedResult=urllib2.urlopen(returnedReq).read()
-import pdb
-pdb.set_trace()
-print returnedResult
+
+print returnedResult  
